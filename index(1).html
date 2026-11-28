@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>RASHEL SHOP BD | Admin Panel</title>
+<style>
+:root{--navy:#17112f;--blue:#8b5cf6;--bg:#090714;--line:#30264d;--text:#f4f0ff;--muted:#b5accd;--danger:#e34b73}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(900px 500px at 8% -5%,rgba(139,92,246,.18),transparent 60%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Inter",system-ui,sans-serif}
+header{background:linear-gradient(120deg,#211342,#6d28d9,#a21caf);color:#fff;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+header h1{font-size:20px;margin:0}header small{opacity:.85}.wrap{max-width:1100px;margin:22px auto;padding:0 14px}
+.card{background:linear-gradient(155deg,#17122b,#21183b);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px;box-shadow:0 10px 30px #0005}
+h2{font-size:18px;margin:0 0 14px}.muted{color:var(--muted);font-size:13px}
+input,textarea,select{width:100%;padding:11px 12px;border:1px solid #493b68;border-radius:9px;font:inherit;background:#100c20;color:var(--text)}
+textarea{min-height:90px;resize:vertical}label{display:block;font-size:13px;font-weight:650;margin:10px 0 5px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+button{border:0;border-radius:9px;padding:10px 15px;font:inherit;font-weight:650;cursor:pointer;background:var(--blue);color:#fff}
+button.secondary{background:#30234c;color:#eee7ff}button.danger{background:var(--danger)}button:disabled{opacity:.5;cursor:not-allowed}
+nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}.tab.active{background:linear-gradient(120deg,#7c3aed,#c026d3);color:white}
+.hidden{display:none!important}.notice{padding:11px 13px;border-radius:9px;background:#292044;color:#e9ddff;margin:10px 0;font-size:14px}
+.error{background:#4a1d31;color:#ffd7e3}.success{background:#123b32;color:#b7f7d7}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}th{color:var(--muted);font-weight:650}td{color:var(--text)}
+.thumb{width:54px;height:48px;object-fit:cover;border-radius:7px;background:#eef2f7}
+.image-preview{display:flex;gap:9px;flex-wrap:wrap;margin:8px 0 14px}.image-preview img{width:82px;height:82px;object-fit:cover;border:1px solid var(--line);border-radius:9px;background:#100c20}.image-preview:empty{display:none}.row-actions{display:flex;gap:6px;flex-wrap:wrap}.row-actions button{padding:7px 10px;font-size:12px}
+.stat{font-size:26px;font-weight:750;color:var(--navy)}.topline{display:flex;justify-content:space-between;align-items:center;gap:10px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.wrap{margin:14px auto}.card{padding:14px}header{align-items:flex-start;flex-direction:column}table{font-size:12px}th,td{padding:7px}.hide-mobile{display:none}}
+
+/* Sidebar layout */
+body{font-family:Inter,system-ui,sans-serif}
+header{position:sticky;top:0;z-index:20;min-height:74px}
+header .brand-area{display:flex;align-items:center;gap:12px;min-width:0}
+header .brand-area img{width:44px;height:44px;object-fit:contain;border-radius:9px;background:#fff;padding:3px}
+#app{display:grid;grid-template-columns:230px minmax(0,1fr);gap:18px;max-width:1400px;margin:18px auto;padding:0 14px}
+#app>#globalMsg{grid-column:1/-1}
+#sideNav{display:flex;flex-direction:column;gap:7px;align-self:start;position:sticky;top:92px;background:#151027;border:1px solid var(--line);border-radius:16px;padding:12px}
+#sideNav .tab{text-align:left;width:100%;background:transparent;color:#d9d0ee;padding:12px 13px}
+#sideNav .tab.active{background:linear-gradient(120deg,#7c3aed,#c026d3);color:white}
+#pageContent{min-width:0}
+.tabpage{min-width:0}
+.ad-slot{margin:12px 0;padding:14px;border:1px solid var(--line);border-radius:12px;background:#100c20}
+.ad-slot textarea{min-height:130px;font-family:ui-monospace,monospace}
+@media(max-width:760px){#app{grid-template-columns:1fr}#sideNav{position:static;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}#sideNav .tab{text-align:left;padding:10px;font-size:13px}#pageContent{min-width:0}}
+@media(max-width:420px){#sideNav{grid-template-columns:1fr 1fr}header{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+ <div class="brand-area"><img id="adminLogoPreview" class="hidden" alt="Admin Logo"><div><h1>RASHEL SHOP BD</h1><small>Admin Panel</small></div></div>
+ <button id="logoutBtn" class="secondary hidden">Logout</button>
+</header>
+<main class="wrap">
+ <section id="loginCard" class="card" style="max-width:440px;margin:45px auto">
+  <h2>Admin Login</h2>
+  <p class="muted">Use your authorized Firebase email and password.</p>
+  <label>Email</label><input id="email" type="email" autocomplete="username" placeholder="Admin Email">
+  <label>Password</label><input id="password" type="password" autocomplete="current-password" placeholder="Password">
+  <div class="actions"><button id="loginBtn">Login</button></div>
+  <div id="loginMsg" class="notice hidden" role="status"></div>
+ </section>
+
+ <section id="app" class="hidden">
+  <div id="globalMsg" class="notice hidden" role="status"></div>
+  <nav id="sideNav">
+   <button class="tab active" data-tab="dashboard">Dashboard</button>
+   <button class="tab secondary" data-tab="products">All Products</button>
+   <button class="tab secondary" data-tab="users">Users Management</button>
+   <button class="tab secondary" data-tab="orders">Orders</button>
+   <button class="tab secondary" data-tab="content">About / Content</button>
+   <button class="tab secondary" data-tab="ads">Advertisements</button>
+   <button class="tab secondary" data-tab="history">Post History</button>
+   <button class="tab secondary" data-tab="settings">Settings</button>
+  </nav>
+  <div id="pageContent">
+  <section id="dashboard" class="tabpage">
+   <div class="grid">
+    <div class="card"><div class="muted">Total Products</div><div id="productCount" class="stat">—</div></div>
+    <div class="card"><div class="muted">Published Products</div><div id="publishedCount" class="stat">—</div></div>
+    <div class="card"><div class="muted">Total Orders</div><div id="orderCount" class="stat">—</div></div>
+    <div class="card"><div class="muted">Total Post Views</div><div id="viewCount" class="stat">—</div></div>
+    <div class="card"><div class="muted">Registered Customers</div><div id="userCount" class="stat">—</div></div><div class="card"><div class="muted">Website Visitors</div><div id="visitorCount" class="stat">—</div></div><div class="card"><div class="muted">Wishlist Saves</div><div id="wishlistCount" class="stat">—</div></div>
+   </div>
+   <div class="card"><h2>Customers & Wishlist</h2><p class="muted">Customer profiles and saved products summary</p><div style="overflow-x:auto"><table><thead><tr><th>Customer</th><th>Email</th><th>Phone</th><th>Saved Products</th></tr></thead><tbody id="customerRows"><tr><td colspan="4">Loading…</td></tr></tbody></table></div></div><div class="card"><h2>Getting Started</h2><p class="muted">Use the All Products section to add products. Use direct image URLs for product images.</p></div>
+  </section>
+
+  <section id="products" class="tabpage hidden">
+   <div class="card">
+    <div class="topline"><h2 id="formTitle">Add New Product</h2><button class="secondary" id="resetForm">New Form</button></div>
+    <input id="editId" type="hidden">
+    <div class="grid">
+     <div><label>Product Name *</label><input id="pName" placeholder="Example: Two-strap sandals"></div>
+     <div><label>Price (BDT) — Per Dozen *</label><input id="pPrice" type="number" min="0" placeholder="Price per dozen"></div>
+     <div><label>Category</label><input id="pCategory" list="shoeCategories" placeholder="Select or enter a category"><datalist id="shoeCategories"><option value="দুই ফিতা স্যান্ডেল"></option><option value="এক ফিতা স্যান্ডেল"></option><option value="স্লিপার"></option><option value="জুতা"></option><option value="অন্যান্য"></option></datalist></div>
+     <div><label>Main Image URL</label><input id="pImage" type="url" placeholder="https://..."></div>
+    </div>
+    <label>Description / Article</label><textarea id="pDescription" placeholder="Enter product details"></textarea>
+    <label>Additional Image URLs (one per line)</label><textarea id="pImages" placeholder="https://image1.jpg&#10;https://image2.jpg"></textarea>
+    <p class="muted">প্রতিটি লাইনে সরাসরি ছবির URL দিন (যেমন .jpg, .png, .webp)। যতগুলো ছবি দেবেন, পণ্যের বিস্তারিত পাতায় সবগুলো দেখাবে।</p>
+    <div id="productImagePreview" class="image-preview" aria-live="polite"></div>
+    <label><input id="pPublished" type="checkbox" checked style="width:auto;margin-right:7px">Publish on Website</label>
+    <div class="actions"><button id="saveProduct">Save Product</button></div>
+    <div id="formMsg" class="notice hidden" role="status"></div>
+   </div>
+   <div class="card"><h2>All Products</h2><div style="overflow-x:auto"><table><thead><tr><th>Image</th><th>Product Name</th><th>Price</th><th>Status</th><th>Action</th></tr></thead><tbody id="productRows"><tr><td colspan="5">Loading…</td></tr></tbody></table></div></div>
+  </section>
+
+
+  <section id="users" class="tabpage hidden">
+   <div class="card">
+    <div class="topline"><h2>Users Management</h2><button class="secondary" id="refreshUsers">Refresh Users</button></div>
+    <p class="muted">Registered customer accounts saved in the Firestore users collection.</p>
+    <div style="overflow-x:auto"><table><thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Registered</th><th>Actions</th></tr></thead><tbody id="userRows"><tr><td colspan="5">Loading...</td></tr></tbody></table></div>
+    <div id="usersMsg" class="notice hidden" role="status"></div>
+   </div>
+   <div class="card">
+    <h2>Send Website Notification</h2>
+    <p class="muted">Select a registered user from the list and send a short message to their website notification inbox. The website theme must display notifications for customers to see them.</p>
+    <label>Selected User ID</label><input id="notifyUserId" readonly placeholder="Choose a user from the table">
+    <label>Notification Title</label><input id="notifyTitle" maxlength="100" placeholder="Message title">
+    <label>Message</label><textarea id="notifyMessage" maxlength="1000" placeholder="Write a useful message for this customer"></textarea>
+    <div class="actions"><button id="sendNotification">Send Notification</button></div>
+    <div id="notifyMsg" class="notice hidden" role="status"></div>
+   </div>
+  </section>
+
+  <section id="orders" class="tabpage hidden">
+   <div class="card"><h2>Customer Orders</h2><p class="muted">Website orders will appear here. WhatsApp messages must be sent by the customer to place an order.</p><div style="overflow-x:auto"><table><thead><tr><th>Date</th><th>Customer</th><th>Product</th><th>Quantity (Dozen)</th><th>Color</th><th>Status</th><th>Action</th></tr></thead><tbody id="orderRows"><tr><td colspan="7">Loading…</td></tr></tbody></table></div></div>
+  </section>
+  <section id="content" class="tabpage hidden">
+   <div class="card"><h2>About / Our Factory</h2><label>Title</label><input id="aboutTitle" placeholder="About Us"><label>Factory Description</label><textarea id="aboutText" placeholder="Describe your factory"></textarea><label>Factory Image URLs (one per line)</label><textarea id="aboutImages" placeholder="https://...jpg"></textarea><label><input id="aboutPublic" type="checkbox" checked style="width:auto;margin-right:7px">Public — Show on Website</label><div class="actions"><button id="saveAbout">Save About</button><button id="deleteAbout" class="danger">Delete About</button></div><div id="aboutMsg" class="notice hidden"></div></div>
+  </section>
+  <section id="ads" class="tabpage hidden">
+   <div class="card"><h2>Advertisement Codes</h2><p class="muted">Paste the ad code only. No title, name, image URL, or click URL is required. Save each slot separately.</p>
+    <div id="adSlots"></div><div id="adMsg" class="notice hidden" role="status"></div>
+   </div>
+  </section>
+  <section id="history" class="tabpage hidden">
+   <div class="card"><div class="topline"><h2>Post History</h2><button id="clearHistory" class="danger">Delete All History</button></div><p class="muted">Product creation, update, and deletion records appear here.</p><div style="overflow-x:auto"><table><thead><tr><th>Date</th><th>Action</th><th>Product Name</th><th>Product ID</th><th>Actions</th></tr></thead><tbody id="historyRows"><tr><td colspan="4">Loading…</td></tr></tbody></table></div></div>
+  </section>
+
+  <section id="settings" class="tabpage hidden">
+   <div class="card"><h2>Website Settings</h2>
+    <label>Website Name</label><input id="sSiteName" placeholder="Rashel Shop BD">
+    <label>Website Logo Image URL</label><input id="sLogo" type="url" placeholder="https://...">
+    <label>Admin Panel Logo Image URL</label><input id="sAdminLogo" type="url" placeholder="https://...">
+    <label>Product Categories (one per line: id|name|icon)</label><textarea id="sCategories" rows="6" placeholder="two-strap|দুই ফিতা স্যান্ডেল|🩴&#10;one-strap|এক ফিতা স্যান্ডেল|🩴&#10;slipper|স্লিপার|🩴&#10;shoes|জুতা|👞&#10;other|অন্যান্য|👟"></textarea><p class="muted">প্রতিটি লাইনে id|নতুন নাম|আইকন লিখুন। ক্যাটাগরির নাম বদলাতে মাঝের অংশটি পরিবর্তন করে Save Settings চাপুন। আগের পণ্যের ক্যাটাগরি ঠিক রাখতে id অপরিবর্তিত রাখুন। নতুন লাইন যোগ করে নতুন ক্যাটাগরি এবং লাইন মুছে দিয়ে ক্যাটাগরি বাদ দিতে পারবেন। সব পরিবর্তন Firestore-এ সেভ হবে।</p>
+    <label>Website Visibility</label><select id="sVisibility"><option value="public">Public</option><option value="private">Private</option></select>
+    <label>Customer Signup</label><select id="sSignup"><option value="true">Enabled</option><option value="false">Disabled</option></select>
+    <label>WhatsApp / Phone Number</label><input id="sPhone" placeholder="018XXXXXXXX">
+    <label>bKash Number</label><input id="sBkash" placeholder="bKash Number">
+    <label>Nagad Number</label><input id="sNagad" placeholder="Nagad Number">
+    <label>Facebook URL</label><input id="sFacebook" type="url" placeholder="https://facebook.com/...">
+    <label>TikTok URL</label><input id="sTiktok" type="url" placeholder="https://tiktok.com/@...">
+    <div class="actions"><button id="saveSettings">Save Settings</button></div>
+    <div id="settingsMsg" class="notice hidden" role="status"></div>
+   </div>
+  </section>
+  </div>
+ </section>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyBG_XX5tfESzs1CZhV0RSoZseXZb5Qz6GA",
+  authDomain: "rashel-shop-bd-d5706.firebaseapp.com",
+  projectId: "rashel-shop-bd-d5706",
+  storageBucket: "rashel-shop-bd-d5706.firebasestorage.app",
+  messagingSenderId: "641474632972",
+  appId: "1:641474632972:web:0008a15b58cd3d9fd33d29"
+};
+const ADMIN_UID = "B3QPpZ5ITIXVWm71CmtrWERbpRA2";
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(), db = firebase.firestore();
+const $ = id => document.getElementById(id);
+$("sCategories").addEventListener("input",refreshCategoryList);
+let products = [];
+function message(id,text,type=""){const el=$(id);el.textContent=text;el.className="notice "+type;el.classList.remove("hidden");}
+function hide(id){$(id).classList.add("hidden");}
+function showApp(on){$("loginCard").classList.toggle("hidden",on);$("app").classList.toggle("hidden",!on);$("logoutBtn").classList.toggle("hidden",!on);}
+$("loginBtn").onclick=async()=>{
+ hide("loginMsg");$("loginBtn").disabled=true;
+ try{await auth.signInWithEmailAndPassword($("email").value.trim(),$("password").value);}
+ catch(e){message("loginMsg",friendly(e),"error");}
+ finally{$("loginBtn").disabled=false;}
+};
+$("logoutBtn").onclick=()=>auth.signOut();
+function friendly(e){return e.code==="auth/invalid-credential"?"ইমেইল বা পাসওয়ার্ড সঠিক নয়।":e.code==="auth/too-many-requests"?"অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করুন।":(e.message||"সমস্যা হয়েছে।");}
+auth.onAuthStateChanged(async user=>{
+ if(!user){showApp(false);return;}
+ if(user.uid!==ADMIN_UID){await auth.signOut();showApp(false);message("loginMsg","This account is not authorized as an admin.","error");return;}
+ try{
+  const adminDoc=await db.collection("admins").doc(user.uid).get();
+  if(!adminDoc.exists || adminDoc.data().active!==true){await auth.signOut();showApp(false);message("loginMsg","এই UID-এর Admin অনুমতি সক্রিয় নয়। Firebase-এর admins ডকুমেন্টে active = true আছে কি না দেখুন।","error");return;}
+  showApp(true);await loadProducts();await loadHistory();await loadSettings();await loadOrders();await loadAbout();await loadAds();await loadStats();await loadUsers();
+ }catch(e){await auth.signOut();showApp(false);message("loginMsg","Admin যাচাই করা যায়নি: "+friendly(e),"error");}
+});
+document.querySelectorAll(".tab").forEach(btn=>btn.onclick=()=>{
+ document.querySelectorAll(".tab").forEach(x=>{x.classList.remove("active");x.classList.add("secondary")});
+ btn.classList.add("active");btn.classList.remove("secondary");
+ document.querySelectorAll(".tabpage").forEach(x=>x.classList.add("hidden"));$(btn.dataset.tab).classList.remove("hidden");
+});
+function renderProductImagePreview(){
+ const urls=[$("pImage").value.trim(),...$("pImages").value.split(/\n+/).map(x=>x.trim())].filter(Boolean);
+ const unique=[...new Set(urls)];
+ $("productImagePreview").innerHTML=unique.map((u,i)=>`<img src="${esc(u)}" alt="Product image ${i+1}" loading="lazy" onerror="this.style.display='none'">`).join("");
+}
+["pImage","pImages"].forEach(id=>$(id).addEventListener("input",renderProductImagePreview));
+function resetForm(){["editId","pName","pPrice","pCategory","pImage","pDescription","pImages"].forEach(id=>$(id).value="");$("pPublished").checked=true;$("formTitle").textContent="Add New Product";renderProductImagePreview();hide("formMsg");}
+$("resetForm").onclick=resetForm;
+async function writeHistory(action,name,id){await db.collection("postHistory").add({action,productName:name,productId:id,adminUid:auth.currentUser.uid,createdAt:firebase.firestore.FieldValue.serverTimestamp()});}
+$("saveProduct").onclick=async()=>{
+ const name=$("pName").value.trim(),price=Number($("pPrice").value),id=$("editId").value;
+ if(!name||$("pPrice").value===""||!Number.isFinite(price)||price<0){message("formMsg","Enter a product name and valid price.","error");return;}
+ const data={name,price,category:$("pCategory").value.trim(),imageUrl:$("pImage").value.trim(),description:$("pDescription").value.trim(),images:$("pImages").value.split(/\n+/).map(x=>x.trim()).filter(Boolean),published:$("pPublished").checked,status:$("pPublished").checked?"published":"hidden",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ $("saveProduct").disabled=true;
+ try{
+  if(id){await db.collection("products").doc(id).update(data);await writeHistory("Edit",name,id);message("formMsg","Product updated successfully.","success");}
+  else{data.createdAt=firebase.firestore.FieldValue.serverTimestamp();const ref=await db.collection("products").add(data);await writeHistory("New Product",name,ref.id);message("formMsg","নতুন Product added successfully.","success");}
+  resetForm();await loadProducts();await loadHistory();
+ }catch(e){message("formMsg","Save failed: "+friendly(e),"error");}
+ finally{$("saveProduct").disabled=false;}
+};
+async function loadProducts(){
+ try{
+  const snap=await db.collection("products").get();products=snap.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>{const at=a.updatedAt?.toMillis?.()||0,bt=b.updatedAt?.toMillis?.()||0;return bt-at;});
+  $("productCount").textContent=products.length;$("publishedCount").textContent=products.filter(p=>p.published===true || p.status==="published").length;
+  $("productRows").innerHTML=products.length?products.map(p=>`<tr><td>${p.imageUrl?`<img class="thumb" src="${esc(p.imageUrl)}" alt="">`:"—"}</td><td>${esc(p.name||"")}</td><td>৳${Number(p.price||0).toLocaleString("bn-BD")}</td><td>${(p.published===true||p.status==="published")?"Published":"Hidden"}</td><td><div class="row-actions"><button class="secondary" onclick="editProduct('${p.id}')">Edit</button><button class="danger" onclick="deleteProduct('${p.id}')">Delete</button></div></td></tr>`).join(""):'<tr><td colspan="5">No products yet.</td></tr>';
+ }catch(e){$("productRows").innerHTML=`<tr><td colspan="5">Failed to load products: ${esc(friendly(e))}</td></tr>`;}
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+window.editProduct=id=>{const p=products.find(x=>x.id===id);if(!p)return;$("editId").value=id;$("pName").value=p.name||"";$("pPrice").value=p.price??"";$("pCategory").value=p.category||"";$("pImage").value=p.imageUrl||"";$("pDescription").value=p.description||"";$("pImages").value=(p.images||[]).join("\n");$("pPublished").checked=p.published===true || p.status==="published";$("formTitle").textContent="Edit Product";renderProductImagePreview();window.scrollTo({top:0,behavior:"smooth"});};
+window.deleteProduct=async id=>{const p=products.find(x=>x.id===id);if(!p||!confirm(`“${p.name}” Delete this product?`))return;try{await db.collection("products").doc(id).delete();await writeHistory("Delete",p.name,id);await loadProducts();await loadHistory();}catch(e){alert("Delete failed: "+friendly(e));}};
+async function loadHistory(){try{const snap=await db.collection("postHistory").orderBy("createdAt","desc").limit(200).get();$("historyRows").innerHTML=snap.empty?'<tr><td colspan="5">No history yet.</td></tr>':snap.docs.map(d=>{const x=d.data(),dt=x.createdAt?.toDate?.();return `<tr><td>${dt?dt.toLocaleString("en-GB"):"—"}</td><td>${esc(x.action)}</td><td>${esc(x.productName)}</td><td>${esc(x.productId)}</td><td><button class="danger" onclick="deleteHistoryItem('${d.id}')">Delete</button></td></tr>`}).join("");}catch(e){$("historyRows").innerHTML=`<tr><td colspan="5">${esc(friendly(e))}</td></tr>`;}}
+window.deleteHistoryItem=async id=>{if(!confirm("Delete this history record?"))return;try{await db.collection("postHistory").doc(id).delete();await loadHistory();}catch(e){alert(friendly(e));}};
+$("clearHistory").onclick=async()=>{if(!confirm("Delete all history records? This cannot be undone."))return;try{const snap=await db.collection("postHistory").get();for(let i=0;i<snap.docs.length;i+=450){const batch=db.batch();snap.docs.slice(i,i+450).forEach(d=>batch.delete(d.ref));await batch.commit();}await loadHistory();message("globalMsg","All history records deleted.","success");}catch(e){message("globalMsg",friendly(e),"error");}};
+async function loadStats(){try{const [v,u,vis,w]=await Promise.all([db.collection("productViews").get(),db.collection("users").get(),db.collection("siteVisits").get(),db.collection("wishlists").get()]);let total=0,visitors=0,wishes=0;v.docs.forEach(d=>total+=Number(d.data().count||0));vis.docs.forEach(d=>visitors+=Number(d.data().count||0));for(const d of w.docs){const s=await db.collection("wishlists").doc(d.id).collection("items").get();wishes+=s.size;}$("viewCount").textContent=total.toLocaleString("bn-BD");$("userCount").textContent=u.size.toLocaleString("bn-BD");$("visitorCount").textContent=visitors.toLocaleString("bn-BD");$("wishlistCount").textContent=wishes.toLocaleString("bn-BD");$("customerRows").innerHTML=u.empty?'<tr><td colspan="4">No customers</td></tr>':u.docs.map(d=>{const x=d.data();return `<tr><td>${esc(x.displayName||x.name||"—")}</td><td>${esc(x.email||"—")}</td><td>${esc(x.phone||"—")}</td><td>${Number(x.wishlistCount||0).toLocaleString("bn-BD")}</td></tr>`}).join("");}catch(e){console.warn("Stats:",e.message);}}
+
+async function loadUsers(){
+ try{
+  const snap=await db.collection("users").get();
+  const docs=snap.docs.sort((a,b)=>{
+   const ta=a.data().createdAt?.toMillis?.()||0, tb=b.data().createdAt?.toMillis?.()||0;
+   return tb-ta;
+  });
+  $("userRows").innerHTML=docs.length?docs.map(d=>{
+   const x=d.data(),dt=x.createdAt?.toDate?.();
+   const name=x.displayName||x.name||"—", email=x.email||"—", phone=x.phone||"";
+   return `<tr><td>${esc(name)}</td><td>${esc(email)}</td><td>${esc(phone||"—")}</td><td>${dt?dt.toLocaleString("en-GB"):"—"}</td><td><div class="actions"><button onclick="selectNotifyUser('${d.id}')">Notify</button>${phone?`<button class="secondary" onclick="openUserWhatsApp('${encodeURIComponent(phone)}','${encodeURIComponent(name)}')">WhatsApp</button>`:""}${email!=="—"?`<button class="secondary" onclick="emailUser('${encodeURIComponent(email)}')">Email</button>`:""}</div></td></tr>`;
+  }).join(""):'<tr><td colspan="5">No registered users found.</td></tr>';
+  $("userCount").textContent=docs.length.toLocaleString("en-US");
+ }catch(e){
+  $("userRows").innerHTML=`<tr><td colspan="5">${esc(friendly(e))}</td></tr>`;
+  message("usersMsg","Could not load users. Check Firestore rules and the users collection: "+friendly(e),"error");
+ }
+}
+window.selectNotifyUser=id=>{$("notifyUserId").value=id;message("usersMsg","User selected. Write a notification below.","success");};
+window.openUserWhatsApp=(phone,name)=>{
+ const p=decodeURIComponent(phone).replace(/\D/g,"");
+ const normalized=p.startsWith("0")?"88"+p:p;
+ const n=decodeURIComponent(name);
+ const text=encodeURIComponent("Hello "+n+",\n\nThank you for registering with Rashel Shop BD. If you need any product information, please contact us.");
+ window.open("https://wa.me/"+normalized+"?text="+text,"_blank","noopener");
+};
+window.emailUser=email=>{window.location.href="mailto:"+decodeURIComponent(email);};
+$("refreshUsers").onclick=loadUsers;
+$("sendNotification").onclick=async()=>{
+ const uid=$("notifyUserId").value.trim(),title=$("notifyTitle").value.trim(),body=$("notifyMessage").value.trim();
+ if(!uid){message("notifyMsg","Select a user first.","error");return;}
+ if(!title||!body){message("notifyMsg","Enter both notification title and message.","error");return;}
+ try{
+  await db.collection("notifications").add({uid,title, message:body,read:false,createdAt:firebase.firestore.FieldValue.serverTimestamp(),sentBy:auth.currentUser.uid});
+  $("notifyTitle").value="";$("notifyMessage").value="";
+  message("notifyMsg","Notification saved. The website must display this notification for the customer to see it.","success");
+ }catch(e){message("notifyMsg","Notification failed: "+friendly(e),"error");}
+};
+
+async function loadOrders(){try{const s=await db.collection("orders").orderBy("createdAt","desc").limit(200).get();const docs=s.docs;$ ("orderCount").textContent=docs.length;$ ("orderRows").innerHTML=docs.length?docs.map(d=>{const x=d.data(),dt=x.createdAt?.toDate?.();return `<tr><td>${dt?dt.toLocaleString("bn-BD"):"—"}</td><td>${esc(x.customerName||"")}<br>${esc(x.phone||"")}</td><td>${esc(x.productName||"")}</td><td>${esc(x.quantityDozen||"")}</td><td>${esc(x.color||"")}</td><td><select onchange="updateOrderStatus('${d.id}',this.value)"><option ${x.status==='Pending'?'selected':''}>Pending</option><option ${x.status==='Accepted'?'selected':''}>Accepted</option><option ${x.status==='Processing'?'selected':''}>Processing</option><option ${x.status==='Shipped'?'selected':''}>Shipped</option><option ${x.status==='Delivered'?'selected':''}>Delivered</option><option ${x.status==='Rejected'?'selected':''}>Rejected</option></select></td><td><button class="danger" onclick="deleteOrder('${d.id}')">Delete</button></td></tr>`}).join(""):'<tr><td colspan="7">No orders yet</td></tr>';}catch(e){$("orderRows").innerHTML=`<tr><td colspan="7">${esc(friendly(e))}</td></tr>`;}}
+window.updateOrderStatus=async(id,status)=>{try{await db.collection("orders").doc(id).update({status,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});await loadOrders();}catch(e){alert(friendly(e));}};
+window.deleteOrder=async(id)=>{if(!confirm("Delete this order?"))return;try{await db.collection("orders").doc(id).delete();await loadOrders();}catch(e){alert(friendly(e));}};
+async function loadAbout(){try{const d=await db.collection("content").doc("about").get();if(!d.exists)return;const x=d.data();$("aboutTitle").value=x.title||"";$("aboutText").value=x.text||"";$("aboutImages").value=(x.images||[]).join("\n");$("aboutPublic").checked=x.published!==false;}catch(e){message("aboutMsg",friendly(e),"error");}}
+$("saveAbout").onclick=async()=>{try{await db.collection("content").doc("about").set({title:$("aboutTitle").value.trim(),text:$("aboutText").value.trim(),images:$("aboutImages").value.split(/\n+/).map(x=>x.trim()).filter(Boolean),published:$("aboutPublic").checked,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});message("aboutMsg","About saved successfully","success");}catch(e){message("aboutMsg",friendly(e),"error");}};
+$("deleteAbout").onclick=async()=>{if(!confirm("Delete About content?"))return;try{await db.collection("content").doc("about").delete();$("aboutTitle").value=$("aboutText").value=$("aboutImages").value="";message("aboutMsg","About deleted successfully","success");}catch(e){message("aboutMsg",friendly(e),"error");}};
+const AD_SLOT_IDS=["code_slot_1","code_slot_2","code_slot_3","code_slot_4","code_slot_5"];
+function renderAdSlots(){const root=$("adSlots");root.innerHTML=AD_SLOT_IDS.map((id,i)=>`<div class="ad-slot"><label>Ad Code Slot ${i+1}</label><textarea id="adCode${i+1}" placeholder="Paste ad network code here"></textarea><div class="actions"><button onclick="saveAdSlot(${i+1})">Save Code ${i+1}</button><button class="secondary" onclick="clearAdSlot(${i+1})">Clear</button></div></div>`).join("");}
+async function loadAds(){renderAdSlots();try{for(let i=0;i<AD_SLOT_IDS.length;i++){const d=await db.collection("ads").doc(AD_SLOT_IDS[i]).get();$("adCode"+(i+1)).value=d.exists?(d.data().html||""):"";}}catch(e){message("adMsg",friendly(e),"error");}}
+window.saveAdSlot=async n=>{const html=$("adCode"+n).value.trim();try{await db.collection("ads").doc(AD_SLOT_IDS[n-1]).set({html,active:!!html,placement:["top","middle","between","bottom","footer"][n-1],type:"html",updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});message("adMsg","Ad code saved successfully.","success");}catch(e){message("adMsg",friendly(e),"error");}};
+window.clearAdSlot=async n=>{if(!confirm("Clear this ad code?"))return;try{await db.collection("ads").doc(AD_SLOT_IDS[n-1]).set({html:"",active:false,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});$("adCode"+n).value="";message("adMsg","Ad code cleared.","success");}catch(e){message("adMsg",friendly(e),"error");}};
+function defaultCategories(){return [{id:"two-strap",name:"দুই ফিতা স্যান্ডেল",icon:"🩴"},{id:"one-strap",name:"এক ফিতা স্যান্ডেল",icon:"🩴"},{id:"slipper",name:"স্লিপার",icon:"🩴"},{id:"shoes",name:"জুতা",icon:"👞"},{id:"other",name:"অন্যান্য",icon:"👟"}];}
+function categoriesText(a){return (Array.isArray(a)?a:defaultCategories()).map(c=>`${c.id}|${c.name}|${c.icon||"📦"}`).join("\n");}
+function refreshCategoryList(){const dl=$("shoeCategories");if(!dl)return;const cats=parseCategories($("sCategories").value);dl.innerHTML=cats.map(c=>`<option value="${esc(c.name)}"></option>`).join("");}
+function parseCategories(v){return v.split(/\n+/).map(x=>x.trim()).filter(Boolean).map((line,i)=>{const z=line.split("|");const hasParts=z.length>1;const name=(hasParts?z[1]:z[0]||"").trim();const rawId=(hasParts?z[0]:name).trim().toLowerCase();const id=rawId.replace(/[^a-z0-9-]+/g,"-").replace(/^-+|-+$/g,"")||`category-${i+1}`;return {id,name,icon:(hasParts?z.slice(2).join("|"):"").trim()||"📦"};}).filter(c=>c.name); }
+async function loadSettings(){try{const d=await db.collection("settings").doc("public").get();if(!d.exists){$("sSiteName").value="RASHEL SHOP BD";$("sCategories").value=categoriesText(defaultCategories());refreshCategoryList();return;}const x=d.data();$("sSiteName").value=x.siteName||"RASHEL SHOP BD";$("sCategories").value=categoriesText(Array.isArray(x.categories)?x.categories:defaultCategories());refreshCategoryList();$("sLogo").value=x.logoUrl||"";$("sAdminLogo").value=x.adminLogoUrl||"";$("adminLogoPreview").src=x.adminLogoUrl||"";$("adminLogoPreview").classList.toggle("hidden",!x.adminLogoUrl);$("sVisibility").value=x.siteVisibility||"public";$("sSignup").value=String(x.signupEnabled!==false);$("sPhone").value=x.phone||"";$("sBkash").value=x.bkash||"";$("sNagad").value=x.nagad||"";$("sFacebook").value=x.facebook||"";$("sTiktok").value=x.tiktok||"";}catch(e){message("settingsMsg",friendly(e),"error");}}
+$("saveSettings").onclick=async()=>{try{await db.collection("settings").doc("public").set({siteName:$("sSiteName").value.trim(),categories:parseCategories($("sCategories").value),logoUrl:$("sLogo").value.trim(),adminLogoUrl:$("sAdminLogo").value.trim(),siteVisibility:$("sVisibility").value,signupEnabled:$("sSignup").value==="true",phone:$("sPhone").value.trim(),bkash:$("sBkash").value.trim(),nagad:$("sNagad").value.trim(),facebook:$("sFacebook").value.trim(),tiktok:$("sTiktok").value.trim(),updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});refreshCategoryList();$("adminLogoPreview").src=$("sAdminLogo").value.trim();$("adminLogoPreview").classList.toggle("hidden",!$("sAdminLogo").value.trim());message("settingsMsg","Settings and categories saved successfully. Website refresh করলে নতুন ক্যাটাগরি দেখা যাবে।","success");}catch(e){message("settingsMsg","Save failed: "+friendly(e),"error");}};
+</script>
+</body>
+</html>
